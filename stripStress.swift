@@ -43,11 +43,17 @@ let stripStress: Void = {
     let regexp = try! NSRegularExpression(pattern: "^([^ \\(]+)[^ ]* (.*)$", options: .anchorsMatchLines)
     regexp.enumerateMatches(in: content, options: [], range: NSRange(location: 0, length: content.count), using: { (result, _, _) in
         let match1 = String(content[Range(result!.range(at: 1), in: content)!])
-        let match2 = String(content[Range(result!.range(at: 2), in: content)!]).filter { !"012".contains($0) }
-        if let prunounciations = dict[match1] as? NSMutableOrderedSet {
-            prunounciations.add(match2)
+        let match2 = content[Range(result!.range(at: 2), in: content)!]
+        let stripped: String
+        if let commentIndex = match2.index(of: "#") {
+            stripped = match2[..<commentIndex].trimmingCharacters(in: .whitespaces).filter { !"012".contains($0) }
         } else {
-            dict.setObject(NSMutableOrderedSet(object: match2), forKey: match1)
+            stripped = match2.filter { !"012".contains($0) }
+        }
+        if let prunounciations = dict[match1] as? NSMutableOrderedSet {
+            prunounciations.add(stripped)
+        } else {
+            dict.setObject(NSMutableOrderedSet(object: stripped), forKey: match1)
         }
     })
     var result = ""
