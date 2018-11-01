@@ -50,8 +50,8 @@ let stripStress: Void = {
         } else {
             stripped = match2.filter { !"012".contains($0) }
         }
-        if let prunounciations = dict[match1] as? NSMutableOrderedSet {
-            prunounciations.add(stripped)
+        if let pronunciations = dict[match1] as? NSMutableOrderedSet {
+            pronunciations.add(stripped)
         } else {
             dict.setObject(NSMutableOrderedSet(object: stripped), forKey: match1)
         }
